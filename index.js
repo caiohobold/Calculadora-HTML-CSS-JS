@@ -26,10 +26,16 @@ const allowedKeys = [
 ];
 
 document.querySelectorAll(".charKey").forEach(function (charKeyBtn) {
+  //para cada botão (for each button) será executado a função:
   charKeyBtn.addEventListener("click", function () {
     const value = charKeyBtn.dataset.value;
     input.value += value;
   });
+});
+
+document.getElementById("clear").addEventListener("click", function () {
+  input.value = "";
+  input.focus();
 });
 
 input.addEventListener("keydown", function (ev) {
@@ -39,7 +45,7 @@ input.addEventListener("keydown", function (ev) {
     //permitidas:
     input.value += ev.key;
     //aqui eu acrescentei o valor de ev.key(tecla clicada) dentro
-    //do input.value // OU SEJA, se ela estiver inclusa, ela é válida.
+    //do input.value // OU SEJA, se ela estiver inclusa, ela aparece na tela.
     return;
   }
   if (ev.key === "Backspace") {
@@ -55,6 +61,42 @@ input.addEventListener("keydown", function (ev) {
   }
 });
 
+document.getElementById("equal").addEventListener("click", calculate);
+
 function calculate() {
-  console.log("Calculado");
+  resultInput.value = "ERROR";
+  resultInput.classList.add("error");
+  const resultado = eval(input.value);
+  resultInput.value = resultado;
+  resultInput.classList.remove("error").value;
 }
+
+document
+  .getElementById("copyToClipboard")
+  .addEventListener("click", function (ev) {
+    const button = ev.currentTarget;
+    if (button.innerText === "Copy") {
+      button.innerText = "Copied!";
+      button.classList.add("success");
+      navigator.clipboard.writeText(resultInput.value);
+    } else {
+      button.innerText = "Copy";
+      button.classList.remove("success");
+    }
+  });
+
+document.getElementById("themeSwitcher").addEventListener("click", function () {
+  if (main.dataset.theme === "dark") {
+    root.style.setProperty("--bg-color", "#f1f5f9");
+    root.style.setProperty("--border-color", "#aaa");
+    root.style.setProperty("--font-color", "#212529");
+    root.style.setProperty("--primary-color", "#26834a");
+    main.dataset.theme = "light";
+  } else {
+    root.style.setProperty("--bg-color", "#212529");
+    root.style.setProperty("--border-color", "#666");
+    root.style.setProperty("--font-color", "#f1f5f9");
+    root.style.setProperty("--primary-color", "#4dff91");
+    main.dataset.theme = "dark";
+  }
+});
